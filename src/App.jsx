@@ -149,7 +149,7 @@ function ToolWorkspace({tool,onBack}) {
 }
 const slugForTool = tool => tool.toLowerCase().replace(/→/g, '-to-').replace(/↔/g, '-').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const toolFromPath = path => {
-  const slug = path.replace(/^\\/+|\\/+$/g, '');
+  const slug = path.replace(/^\/+|\/+$/g, '');
   if (!slug) return '';
   return groups.flatMap(group => group.tools).find(tool => slugForTool(tool) === slug) || '';
 };
