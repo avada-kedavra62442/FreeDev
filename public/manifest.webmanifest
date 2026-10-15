@@ -1,0 +1,12 @@
+{
+  "id": "/",
+  "name": "FreeDev — Developer Toolbox",
+  "short_name": "FreeDev",
+  "description": "Free, private-first developer utilities for everyday coding work.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07100b",
+  "theme_color": "#07130e",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
