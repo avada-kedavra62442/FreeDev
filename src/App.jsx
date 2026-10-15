@@ -107,7 +107,33 @@ function ToolWorkspace({tool,onBack}) {
         {isCase&&<label className="full-field">Output style<select value={caseType} onChange={e=>setCaseType(e.target.value)}>{['UPPERCASE','lowercase','Title Case','Sentence case','camelCase','snake_case','kebab-case'].map(x=><option key={x}>{x}</option>)}</select></label>}
         {isYaml&&<label className="full-field">Conversion direction<select value={direction} onChange={e=>setDirection(e.target.value)}><option>YAML → JSON</option><option>JSON → YAML</option></select></label>}
         {isTime&&<><label className="full-field">Date and time<input type="datetime-local" value={date} onChange={e=>setDate(e.target.value)}/></label><label className="full-field">Target timezone<input value={zone} onChange={e=>setZone(e.target.value)} placeholder="Asia/Kolkata"/></label></>}
-        {isColor&&<div className="visual-controls">{tool==='Gradient Generator'?<><label>Start colour<input type="color" value={colorA} onChange={e=>setColorA(e.target.value)}/></label><label>End colour<input type="color" value={colorB} onChange={e=>setColorB(e.target.value)}/></>:<><label>Blur <b>{shadowBlur}px</b><input type="range" min="0" max="80" value={shadowBlur} onChange={e=>setShadowBlur(+e.target.value)}/></label><label>Vertical offset <b>{shadowY}px</b><input type="range" min="-30" max="50" value={shadowY} onChange={e=>setShadowY(+e.target.value)}/></label></>}</div>}
+{isColor && (
+          <div className="visual-controls">
+            {tool === 'Gradient Generator' ? (
+              <>
+                <label>
+                  Start colour
+                  <input type="color" value={colorA} onChange={e => setColorA(e.target.value)} />
+                </label>
+                <label>
+                  End colour
+                  <input type="color" value={colorB} onChange={e => setColorB(e.target.value)} />
+                </label>
+              </>
+            ) : (
+              <>
+                <label>
+                  Blur <b>{shadowBlur}px</b>
+                  <input type="range" min="0" max="80" value={shadowBlur} onChange={e => setShadowBlur(+e.target.value)} />
+                </label>
+                <label>
+                  Vertical offset <b>{shadowY}px</b>
+                  <input type="range" min="-30" max="50" value={shadowY} onChange={e => setShadowY(+e.target.value)} />
+                </label>
+              </>
+            )}
+          </div>
+        )}
         {!isRegex&&!isDiff&&!isRegexGen&&!isCase&&!isTime&&!isColor&&tool!=='Unix Timestamp'&&<textarea className="code-input" value={input} onChange={e=>setInput(e.target.value)} placeholder={placeholder} spellCheck="false"/>}
         {isColor&&<div className="preview-tile" style={tool==='Gradient Generator'?{background:`linear-gradient(${angle}deg, ${colorA}, ${colorB})`}:{boxShadow:`0 ${shadowY}px ${shadowBlur}px rgba(0,0,0,.45)`}}>{tool==='Gradient Generator'?'Gradient preview':'Shadow preview'}</div>}
         {tool==='Gradient Generator'&&<label className="range-label">Angle <b>{angle}°</b><input type="range" min="0" max="360" value={angle} onChange={e=>setAngle(+e.target.value)}/></label>}
