@@ -41,3 +41,27 @@
 .preview-caption{font:9px var(--mono);letter-spacing:1.2px;color:#7da58a;margin:0 0 9px}
 .css-runner-frame{display:block;width:100%;height:300px;border:1px solid rgba(159,210,174,.2);border-radius:9px;background:#f5f7f6}
 @media(max-width:640px){.css-preview-wrap{padding:12px 12px 0}.css-runner-frame{height:260px}}
+
+
+/* Theme-matched scrollbars; homepage scrollbars are hidden without disabling scroll */
+html{scrollbar-width:thin;scrollbar-color:#28563a #07100b}
+body::-webkit-scrollbar,.sidebar::-webkit-scrollbar{width:9px}
+body::-webkit-scrollbar-track,.sidebar::-webkit-scrollbar-track{background:#07100b}
+body::-webkit-scrollbar-thumb,.sidebar::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3d8055,#173d27);border:2px solid #07100b;border-radius:99px}
+body::-webkit-scrollbar-thumb:hover,.sidebar::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#68c986,#285b3a)}
+.sidebar{scrollbar-width:thin;scrollbar-color:#28563a transparent}
+body:has(.home-view){scrollbar-width:none}
+body:has(.home-view)::-webkit-scrollbar{display:none;width:0;height:0}
+.install-top{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:8px;border:1px solid rgba(134,222,158,.24);background:linear-gradient(145deg,rgba(38,104,59,.3),rgba(13,32,20,.68));color:#c5f3d0;font-size:10px;transition:border-color .2s,background .2s,transform .2s}
+.install-top:hover{border-color:rgba(139,239,176,.55);background:rgba(37,102,59,.5);transform:translateY(-1px)}
+.shadow-preview{position:relative;margin-top:4px!important;margin-bottom:25px!important;background:linear-gradient(145deg,#f4fff6,#b8d5c0)!important;color:#183a25!important;text-shadow:none!important;border:1px solid rgba(235,255,240,.85);font-weight:600;box-shadow:0 20px 40px rgba(0,0,0,.4)}
+.timezone-actions{display:flex;gap:9px;flex-wrap:wrap;padding:13px 16px 0}
+.timezone-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid rgba(144,219,163,.2);border-radius:7px;padding:9px 11px;background:linear-gradient(140deg,rgba(28,67,40,.75),rgba(9,23,14,.85));color:#a9d9b7;font-size:10px;transition:.2s}
+.timezone-toggle:hover,.timezone-toggle.is-on{border-color:rgba(112,230,151,.55);background:linear-gradient(140deg,rgba(39,113,63,.62),rgba(13,37,22,.92));color:#d8ffe3;box-shadow:0 0 18px rgba(70,190,105,.09)}
+.timezone-countries{margin:14px 16px 18px;padding:13px 14px;border:1px solid rgba(145,211,160,.14);border-radius:9px;background:linear-gradient(135deg,rgba(30,66,40,.35),rgba(10,22,14,.55));backdrop-filter:blur(12px)}
+.timezone-countries span{font:9px var(--mono);letter-spacing:1px;color:#80c995}
+.timezone-countries p{font-size:11px;line-height:1.7;color:#c2d9c8;margin:8px 0 0}
+.workspace-footer{max-width:1450px;margin:0 auto;padding:24px 39px 28px;border-top:1px solid var(--line)}
+.workspace-footer .footer-brand{padding:0}
+@media(max-width:900px){.workspace-footer{padding-left:22px;padding-right:22px}}
+@media(max-width:640px){.install-top{padding:7px 8px}.install-top span{display:inline}.workspace-footer{padding:22px 14px 26px}.timezone-actions{padding-left:12px;padding-right:12px}.timezone-countries{margin-left:12px;margin-right:12px}}
