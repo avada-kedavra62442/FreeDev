@@ -43,15 +43,18 @@
 @media(max-width:640px){.css-preview-wrap{padding:12px 12px 0}.css-runner-frame{height:260px}}
 
 
-/* Theme-matched scrollbars; homepage scrollbars are hidden without disabling scroll */
-html{scrollbar-width:thin;scrollbar-color:#28563a #07100b}
-body::-webkit-scrollbar,.sidebar::-webkit-scrollbar{width:9px}
-body::-webkit-scrollbar-track,.sidebar::-webkit-scrollbar-track{background:#07100b}
-body::-webkit-scrollbar-thumb,.sidebar::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#3d8055,#173d27);border:2px solid #07100b;border-radius:99px}
-body::-webkit-scrollbar-thumb:hover,.sidebar::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#68c986,#285b3a)}
-.sidebar{scrollbar-width:thin;scrollbar-color:#28563a transparent}
-body:has(.home-view){scrollbar-width:none}
-body:has(.home-view)::-webkit-scrollbar{display:none;width:0;height:0}
+/* Emerald scrollbars for the site and installed PWA */
+html,body,#root{scrollbar-width:thin;scrollbar-color:#34764a #07100b}
+html::-webkit-scrollbar,body::-webkit-scrollbar,#root::-webkit-scrollbar,.sidebar::-webkit-scrollbar{width:9px;height:9px}
+html::-webkit-scrollbar-track,body::-webkit-scrollbar-track,#root::-webkit-scrollbar-track,.sidebar::-webkit-scrollbar-track{background:#07100b}
+html::-webkit-scrollbar-thumb,body::-webkit-scrollbar-thumb,#root::-webkit-scrollbar-thumb,.sidebar::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#4b9963,#173d27);border:2px solid #07100b;border-radius:99px}
+html::-webkit-scrollbar-thumb:hover,body::-webkit-scrollbar-thumb:hover,#root::-webkit-scrollbar-thumb:hover,.sidebar::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#68c986,#285b3a)}
+.sidebar{scrollbar-width:thin;scrollbar-color:#34764a transparent}
+/* Hide only the homepage's page scrollbar; scrolling still works with wheel, touch and keyboard. */
+html:has(.home-view),body:has(.home-view),body:has(.home-view) #root{scrollbar-width:none}
+html:has(.home-view)::-webkit-scrollbar,body:has(.home-view)::-webkit-scrollbar,body:has(.home-view) #root::-webkit-scrollbar{display:none;width:0;height:0}
+/* Keep the emerald scrollbar available in standalone PWA tool pages. */
+@media (display-mode: standalone){html,body,#root{scrollbar-width:thin;scrollbar-color:#34764a #07100b}html:has(.home-view),body:has(.home-view),body:has(.home-view) #root{scrollbar-width:none}html:has(.home-view)::-webkit-scrollbar,body:has(.home-view)::-webkit-scrollbar,body:has(.home-view) #root::-webkit-scrollbar{display:none;width:0;height:0}}
 .install-top{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border-radius:8px;border:1px solid rgba(134,222,158,.24);background:linear-gradient(145deg,rgba(38,104,59,.3),rgba(13,32,20,.68));color:#c5f3d0;font-size:10px;transition:border-color .2s,background .2s,transform .2s}
 .install-top:hover{border-color:rgba(139,239,176,.55);background:rgba(37,102,59,.5);transform:translateY(-1px)}
 .shadow-preview{position:relative;margin-top:4px!important;margin-bottom:25px!important;background:linear-gradient(145deg,#f4fff6,#b8d5c0)!important;color:#183a25!important;text-shadow:none!important;border:1px solid rgba(235,255,240,.85);font-weight:600;box-shadow:0 20px 40px rgba(0,0,0,.4)}
@@ -65,3 +68,10 @@ body:has(.home-view)::-webkit-scrollbar{display:none;width:0;height:0}
 .workspace-footer .footer-brand{padding:0}
 @media(max-width:900px){.workspace-footer{padding-left:22px;padding-right:22px}}
 @media(max-width:640px){.install-top{padding:7px 8px}.install-top span{display:inline}.workspace-footer{padding:22px 14px 26px}.timezone-actions{padding-left:12px;padding-right:12px}.timezone-countries{margin-left:12px;margin-right:12px}}
+
+
+/* Consistent footer on the homepage, tool pages and installed PWA */
+.site-footer{width:100%;box-sizing:border-box}
+.site-footer .footer-links{flex-wrap:wrap;row-gap:10px}
+.workspace-footer{margin-top:0}
+@media(display-mode:standalone){.site-footer{padding-bottom:max(25px,env(safe-area-inset-bottom))}.workspace-footer{padding-bottom:max(28px,env(safe-area-inset-bottom))}}
