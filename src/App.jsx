@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Braces, Palette, Regex, Link2, Clock3, FileText, Database, Search, Copy, Download, Check, ChevronRight, Code2, Sparkles, ShieldCheck, Zap, Menu, X, RotateCcw, ArrowLeftRight, WandSparkles, Github, ExternalLink, ChevronDown } from 'lucide-react';
 import Papa from 'papaparse';
 import yaml from 'js-yaml';
@@ -121,28 +121,60 @@ function ToolWorkspace({tool,onBack}) {
     </div>
   </div>;
 }
+const slugForTool = tool => tool.toLowerCase().replace(/→/g, '-to-').replace(/↔/g, '-').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+const toolFromPath = path => {
+  const slug = path.replace(/^\\/+|\\/+$/g, '');
+  if (!slug) return '';
+  return groups.flatMap(group => group.tools).find(tool => slugForTool(tool) === slug) || '';
+};
 export default function App() {
-  const [active,setActive]=useState(''); const [query,setQuery]=useState(''); const [mobileOpen,setMobileOpen]=useState(false);
+  const [active,setActive]=useState(()=>toolFromPath(window.location.pathname));
+  const [query,setQuery]=useState('');
+  const [mobileOpen,setMobileOpen]=useState(false);
   const filtered=useMemo(()=>groups.map(g=>({...g,tools:g.tools.filter(t=>t.toLowerCase().includes(query.toLowerCase())||g.name.toLowerCase().includes(query.toLowerCase()))})).filter(g=>g.tools.length),[query]);
-  const selectTool=t=>{setActive(t);setMobileOpen(false);window.scrollTo({top:0,behavior:'smooth'});};
+  useEffect(()=>{
+    const syncRoute=()=>{setActive(toolFromPath(window.location.pathname));setMobileOpen(false);};
+    window.addEventListener('popstate',syncRoute);
+    return ()=>window.removeEventListener('popstate',syncRoute);
+  },[]);
+  useEffect(()=>{
+    document.title = active ? `${active} — FreeDev` : 'FreeDev — Developer Toolbox';
+  },[active]);
+  const goHome=()=>{
+    window.history.pushState({},'', '/');
+    setActive('');
+    setQuery('');
+    setMobileOpen(false);
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  const selectTool=t=>{
+    window.history.pushState({},'', `/${slugForTool(t)}`);
+    setActive(t);
+    setMobileOpen(false);
+    window.scrollTo({top:0,behavior:'smooth'});
+  };
+  const allTools=groups.flatMap(group=>group.tools.map(tool=>({tool,group})));
   return <div className="app-shell">
     <aside className={cx('sidebar',mobileOpen&&'sidebar-open')}>
-      <a className="brand" href="#" onClick={e=>{e.preventDefault();setActive('');setQuery('')}}><span className="brand-mark"><Code2 size={24}/></span><span><strong>Free<span>Dev</span></strong><small>DEVELOPER TOOLBOX</small></span></a>
+      <a className="brand" href="/" onClick={e=>{e.preventDefault();goHome()}}><span className="brand-mark"><Code2 size={24}/></span><span><strong>Free<span>Dev</span></strong><small>DEVELOPER TOOLBOX</small></span></a>
       <div className="sidebar-search"><Search size={16}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Find a tool…"/><kbd>/</kbd></div>
-      <button className={cx('nav-home',!active&&'selected')} onClick={()=>{setActive('');setMobileOpen(false)}}><span className="nav-symbol"><Sparkles size={17}/></span> Overview <span className="nav-count">⌘ K</span></button>
+      <button className={cx('nav-home',!active&&'selected')} onClick={goHome}><span className="nav-symbol"><Sparkles size={17}/></span> Home <span className="nav-count">25 tools</span></button>
       <div className="nav-label">TOOLKIT</div>
       <nav>{filtered.map(group=><div className="nav-group" key={group.name}><div className="nav-group-title"><group.icon size={15}/><span>{group.name}</span><span className="nav-count">{group.tools.length}</span></div>{group.tools.map(t=><button key={t} className={cx('nav-tool',active===t&&'active')} onClick={()=>selectTool(t)}>{t}<ChevronRight size={13}/></button>)}</div>)}</nav>
       <div className="sidebar-bottom"><div className="local-badge"><span className="pulse"/><span><b>Browser-native</b><small>No uploads. No accounts.</small></span></div><a href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer" className="github-link"><Github size={16}/> View on GitHub <ExternalLink size={13}/></a></div>
     </aside>
     {mobileOpen&&<button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="Close menu"/>}
     <main className="main-area">
-      <header className="topbar"><button className="mobile-menu" onClick={()=>setMobileOpen(!mobileOpen)} aria-label="Toggle menu">{mobileOpen?<X/>:<Menu/>}</button><div className="breadcrumbs"><span>FreeDev</span><ChevronRight size={14}/><b>{active||'Overview'}</b></div><div className="topbar-right"><span className="status-pill"><span className="pulse"/> All systems local</span><a className="github-top" href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer"><Github size={16}/><span>GitHub</span></a></div></header>
-      {active?<ToolWorkspace key={active} tool={active} onBack={()=>setActive('')}/>:<div className="home-view">
-        <section className="hero"><div className="hero-glow"/><div className="hero-content"><div className="eyebrow"><span className="pulse"/> THE TOOLKIT BUILT FOR BUILDERS</div><h1>Less busywork.<br/><span>More building.</span></h1><p>A focused collection of everyday developer utilities. Fast, thoughtfully designed, and free — no accounts, no paywalls, no nonsense.</p><div className="hero-actions"><button className="button-primary" onClick={()=>selectTool('JSON Formatter')}><Braces size={17}/> Explore the toolkit <ChevronRight size={16}/></button><span className="hero-note"><ShieldCheck size={15}/> Your data stays in your browser</span></div></div><div className="hero-art"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="glass-code"><div className="code-head"><span/><span/><span/><small>freedev.config</small></div><div className="code-lines"><span><i>01</i><b>const</b> toolkit = {'{'}</span><span><i>02</i>&nbsp; free: <em>true</em>,</span><span><i>03</i>&nbsp; friction: <em>null</em>,</span><span><i>04</i>&nbsp; tools: <u>25+</u></span><span><i>05</i>{'}'};</span><span><i>06</i><strong>buildSomething();</strong></span></div><div className="code-foot"><span className="pulse"/> READY TO SHIP <span>UTF-8</span></div></div><div className="floating-chip chip-top"><Braces size={15}/> JSON <span>↗</span></div><div className="floating-chip chip-bottom"><Zap size={15}/> Instant tools</div></div><div className="hero-bottom"><span>BUILT FOR THE DAILY WORKFLOW</span><div><span><Check size={14}/> 100% free</span><span><Check size={14}/> No sign-up</span><span><Check size={14}/> Private by design</span></div></div></section>
-        <section className="section tools-section"><div className="section-heading"><div><div className="eyebrow">YOUR DAILY TOOLBELT</div><h2>Everything you need.<br/><span>Nothing you don't.</span></h2></div><p>Pick a category and get straight to work. Every tool is designed to do one job well.</p></div><div className="category-grid">{groups.map((g,i)=><button key={g.name} className="category-card" onClick={()=>selectTool(g.tools[0])}><div className="category-top"><span className="category-icon"><g.icon size={21}/></span><span className="card-arrow"><ArrowLeftRight size={16}/></span></div><h3>{g.name}</h3><p>{g.tools.length} focused utilities</p><div className="category-tools">{g.tools.slice(0,4).map(t=><span key={t}>{t}</span>)}{g.tools.length>4&&<span>+ more</span>}</div><div className="category-bottom"><span>Explore category</span><ChevronRight size={16}/></div></button>)}</div></section>
+      <header className="topbar"><button className="mobile-menu" onClick={()=>setMobileOpen(!mobileOpen)} aria-label="Toggle menu">{mobileOpen?<X/>:<Menu/>}</button><div className="breadcrumbs"><a href="/" onClick={e=>{e.preventDefault();goHome()}}>FreeDev</a><ChevronRight size={14}/><b>{active||'Home'}</b></div><div className="topbar-right"><span className="status-pill"><span className="pulse"/> All systems local</span><a className="github-top" href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer"><Github size={16}/><span>GitHub</span></a></div></header>
+      {active?<ToolWorkspace key={active} tool={active} onBack={goHome}/>:<div className="home-view">
+        <section className="hero"><div className="hero-glow"/><div className="hero-content"><div className="eyebrow"><span className="pulse"/> THE TOOLKIT BUILT FOR BUILDERS</div><h1>Less busywork.<br/><span>More building.</span></h1><p>A focused collection of everyday developer utilities. Fast, thoughtfully designed, and free — no accounts, no paywalls, no nonsense.</p><div className="hero-actions"><button className="button-primary" onClick={()=>document.getElementById('all-tools')?.scrollIntoView({behavior:'smooth'})}><Braces size={17}/> Explore all 25 tools <ChevronRight size={16}/></button><span className="hero-note"><ShieldCheck size={15}/> Your data stays in your browser</span></div></div><div className="hero-art"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="glass-code"><div className="code-head"><span/><span/><span/><small>freedev.config</small></div><div className="code-lines"><span><i>01</i><b>const</b> toolkit = {'{'}</span><span><i>02</i>&nbsp; free: <em>true</em>,</span><span><i>03</i>&nbsp; friction: <em>null</em>,</span><span><i>04</i>&nbsp; tools: <u>25+</u></span><span><i>05</i>{'}'};</span><span><i>06</i><strong>buildSomething();</strong></span></div><div className="code-foot"><span className="pulse"/> READY TO SHIP <span>UTF-8</span></div></div><div className="floating-chip chip-top"><Braces size={15}/> JSON <span>↗</span></div><div className="floating-chip chip-bottom"><Zap size={15}/> Instant tools</div></div><div className="hero-bottom"><span>BUILT FOR THE DAILY WORKFLOW</span><div><span><Check size={14}/> 100% free</span><span><Check size={14}/> No sign-up</span><span><Check size={14}/> Private by design</span></div></div></section>
+        <section className="section tools-section"><div className="section-heading"><div><div className="eyebrow">YOUR DAILY TOOLBELT</div><h2>Tools for every<br/><span>part of the workflow.</span></h2></div><p>Browse by category or jump straight into one of the focused utilities below.</p></div><div className="category-grid">{groups.map(g=><button key={g.name} className="category-card" onClick={()=>document.getElementById(`tool-group-${slugForTool(g.name)}`)?.scrollIntoView({behavior:'smooth',block:'start'})}><div className="category-top"><span className="category-icon"><g.icon size={21}/></span><span className="card-arrow"><ArrowLeftRight size={16}/></span></div><h3>{g.name}</h3><p>{g.tools.length} focused utilities</p><div className="category-tools">{g.tools.slice(0,4).map(t=><span key={t}>{t}</span>)}{g.tools.length>4&&<span>+ more</span>}</div><div className="category-bottom"><span>Browse tools</span><ChevronRight size={16}/></div></button>)}</div></section>
+        <section className="section all-tools-section" id="all-tools"><div className="section-heading"><div><div className="eyebrow">25 TOOLS · 7 CATEGORIES</div><h2>Pick a tool.<br/><span>Get straight to work.</span></h2></div><p>Every card opens its own dedicated page and shareable URL. No buried workspaces.</p></div>
+          {groups.map(group=><section className="tool-group-section" id={`tool-group-${slugForTool(group.name)}`} key={group.name}><div className="tool-group-heading"><span className="category-icon"><group.icon size={19}/></span><div><h3>{group.name}</h3><p>{group.tools.length} tools</p></div></div><div className="tool-card-grid">{group.tools.map((tool,index)=><button key={tool} className="tool-card" onClick={()=>selectTool(tool)}><div className="tool-card-top"><span className="tool-card-icon"><Code2 size={17}/></span><span className="tool-card-index">{String(index+1).padStart(2,'0')}</span></div><h4>{tool}</h4><p>{descriptions[tool]}</p><span className="tool-card-link">Open tool <ChevronRight size={15}/></span></button>)}</div></section>)}
+        </section>
         <section className="section feature-strip"><div className="feature-intro"><div className="eyebrow">THE FREEDEV PROMISE</div><h2>Developer tools.<br/><span>Without the baggage.</span></h2><p>Utilities should save you time, not create another workflow to manage.</p></div><div className="feature-list"><div><span className="feature-icon"><Zap size={19}/></span><section><b>Instant by design</b><p>Results run right in your browser. No waiting on a server round-trip for simple transformations.</p></section></div><div><span className="feature-icon"><ShieldCheck size={19}/></span><section><b>Private by default</b><p>Your pasted code and data stay on your device in these client-side tools.</p></section></div><div><span className="feature-icon"><Sparkles size={19}/></span><section><b>Focused, not bloated</b><p>Clear controls, useful output and no feature walls getting between you and the task.</p></section></div></div></section>
         <section className="cta-band"><div className="cta-orb"/><div><div className="eyebrow">READY WHEN YOU ARE</div><h2>Get back to building.</h2><p>Pick a tool. Paste your input. Get your result. That's the whole workflow.</p></div><button className="button-primary" onClick={()=>selectTool('JSON Formatter')}>Open JSON Formatter <ChevronRight size={16}/></button></section>
-        <footer className="site-footer"><a className="brand footer-brand" href="#" onClick={e=>{e.preventDefault();setActive('')}}><span className="brand-mark"><Code2 size={21}/></span><span><strong>Free<span>Dev</span></strong><small>Useful tools. No nonsense.</small></span></a><p>Free developer utilities, built for the people who build things.</p><div className="footer-links"><a href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer">GitHub <ExternalLink size={12}/></a><span>Free forever · No account required</span></div><div className="copyright">© {new Date().getFullYear()} FreeDev. Built to be useful.</div></footer>
+        <footer className="site-footer"><a className="brand footer-brand" href="/" onClick={e=>{e.preventDefault();goHome()}}><span className="brand-mark"><Code2 size={21}/></span><span><strong>Free<span>Dev</span></strong><small>Useful tools. No nonsense.</small></span></a><p>Free developer utilities, built for the people who build things.</p><div className="footer-links"><a href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer">GitHub <ExternalLink size={12}/></a><span>Free forever · No account required</span></div><div className="copyright">© {new Date().getFullYear()} FreeDev. Built to be useful.</div></footer>
       </div>}
     </main>
   </div>;
