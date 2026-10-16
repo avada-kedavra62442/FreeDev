@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Braces, Palette, Regex, Link2, Clock3, FileText, Database, Search, Copy, Download, Check, ChevronRight, Code2, Sparkles, ShieldCheck, Zap, Menu, X, RotateCcw, ArrowLeftRight, WandSparkles, Github, ExternalLink, ChevronDown } from 'lucide-react';
+import { Braces, Palette, Regex, Link2, Clock3, FileText, Database, Search, Copy, Download, Check, ChevronRight, Code2, Sparkles, ShieldCheck, Zap, Menu, X, RotateCcw, ArrowLeftRight, WandSparkles, Github, ExternalLink, ChevronDown, Mail, Linkedin } from 'lucide-react';
 import Papa from 'papaparse';
 import yaml from 'js-yaml';
 import { diffWords } from 'diff';
@@ -186,6 +186,56 @@ const toolFromPath = path => {
   if (!slug) return '';
   return groups.flatMap(group => group.tools).find(tool => slugForTool(tool) === slug) || '';
 };
+
+function SiteFooter({ onHome, onSelectTool, workspace = false }) {
+  const showAllTools = () => {
+    onHome();
+    window.setTimeout(() => document.getElementById('all-tools')?.scrollIntoView({ behavior: 'smooth' }), 80);
+  };
+  return <footer className={cx('site-footer', workspace && 'workspace-footer')}>
+    <div className="footer-main">
+      <div className="footer-brand">
+        <a className="footer-brand-row" href="/" onClick={e => { e.preventDefault(); onHome(); }}>
+          <span className="brand-mark footer-favicon"><Code2 size={21}/></span>
+          <span className="footer-brand-name">Free<span>Dev</span></span>
+        </a>
+        <p>Useful software.<br/>Without the nonsense.</p>
+        <div className="footer-status"><span className="status-dot"/><span className="pulse"/> Building useful things</div>
+        <div className="footer-socials">
+          <a href="https://github.com/avada-kedavra62442/" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="GitHub" title="GitHub"><Github size={18}/></a>
+          <a href="mailto:aarav.krish62442@gmail.com" className="footer-social-link" aria-label="Email" title="Email"><Mail size={18}/></a>
+          <a href="https://www.linkedin.com/in/aarav-krish-665702440/" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="LinkedIn" title="LinkedIn"><Linkedin size={18}/></a>
+        </div>
+      </div>
+      <div className="footer-column">
+        <span className="footer-heading">PRODUCTS</span>
+        <button onClick={onHome}>FreeDev</button>
+        <button onClick={showAllTools}>All developer tools</button>
+      </div>
+      <div className="footer-column">
+        <span className="footer-heading">TOOLS</span>
+        <button onClick={() => onSelectTool('JSON Formatter')}>JSON Formatter</button>
+        <button onClick={() => onSelectTool('CSS Formatter')}>CSS Formatter</button>
+        <button onClick={() => onSelectTool('Regex Tester')}>Regex Tester</button>
+        <button onClick={() => onSelectTool('URL Parser')}>URL Parser</button>
+        <button onClick={() => onSelectTool('Timezone Converter')}>Timezone Converter</button>
+      </div>
+      <div className="footer-column">
+        <span className="footer-heading">MORE TOOLS</span>
+        <button onClick={() => onSelectTool('Text Diff')}>Text Diff</button>
+        <button onClick={() => onSelectTool('CSV ↔ JSON')}>CSV ↔ JSON</button>
+        <button onClick={() => onSelectTool('JWT Decoder')}>JWT Decoder</button>
+        <a href="mailto:aarav.krish62442@gmail.com?subject=FreeToolz%20Feedback">Send feedback</a>
+      </div>
+    </div>
+    <div className="footer-bottom">
+      <span>© {new Date().getFullYear()} FreeToolz</span>
+      <span className="footer-line"/>
+      <span>BUILT FOR THE WEB · BUILT TO BE USEFUL</span>
+    </div>
+  </footer>;
+}
+
 export default function App() {
   const [active,setActive]=useState(()=>toolFromPath(window.location.pathname));
   const [query,setQuery]=useState('');
@@ -228,7 +278,7 @@ export default function App() {
     {mobileOpen&&<button className="mobile-scrim" onClick={()=>setMobileOpen(false)} aria-label="Close menu"/>}
     <main className="main-area">
       <header className="topbar"><button className="mobile-menu" onClick={()=>setMobileOpen(!mobileOpen)} aria-label="Toggle menu">{mobileOpen?<X/>:<Menu/>}</button><div className="breadcrumbs"><a href="/" onClick={e=>{e.preventDefault();goHome()}}>FreeDev</a><ChevronRight size={14}/><b>{active||'Home'}</b></div><div className="topbar-right"><span className="status-pill"><span className="pulse"/> All systems local</span><button className="install-top" onClick={installApp}><Download size={14}/><span>Install</span></button></div></header>
-      {active?<><ToolWorkspace key={active} tool={active} onBack={goHome}/><footer className="site-footer workspace-footer"><a className="brand footer-brand" href="/" onClick={e=>{e.preventDefault();goHome()}}><span className="brand-mark"><Code2 size={21}/></span><span><strong>Free<span>Dev</span></strong><small>Useful tools. No nonsense.</small></span></a><p>Free developer utilities, built for the people who build things.</p><div className="footer-links"><a href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer">GitHub <ExternalLink size={12}/></a><a href="mailto:aarav.krish62442@gmail.com">Developer contact</a><span>Free forever · No account required</span></div><div className="copyright">© {new Date().getFullYear()} FreeDev. Built to be useful.</div></footer></>:<div className="home-view">
+      {active?<><ToolWorkspace key={active} tool={active} onBack={goHome}/><SiteFooter onHome={goHome} onSelectTool={selectTool} workspace /></>:<div className="home-view">
         <section className="hero"><div className="hero-glow"/><div className="hero-content"><div className="eyebrow"><span className="pulse"/> THE TOOLKIT BUILT FOR BUILDERS</div><h1>Less busywork.<br/><span>More building.</span></h1><p>A focused collection of everyday developer utilities. Fast, thoughtfully designed, and free — no accounts, no paywalls, no nonsense.</p><div className="hero-actions"><button className="button-primary" onClick={()=>document.getElementById('all-tools')?.scrollIntoView({behavior:'smooth'})}><Braces size={17}/> Explore all 32 tools <ChevronRight size={16}/></button><span className="hero-note"><ShieldCheck size={15}/> Your data stays in your browser</span></div></div><div className="hero-art"><div className="orbit orbit-one"/><div className="orbit orbit-two"/><div className="glass-code"><div className="code-head"><span/><span/><span/><small>freedev.config</small></div><div className="code-lines"><span><i>01</i><b>const</b> toolkit = {'{'}</span><span><i>02</i>&nbsp; free: <em>true</em>,</span><span><i>03</i>&nbsp; friction: <em>null</em>,</span><span><i>04</i>&nbsp; tools: <u>32</u></span><span><i>05</i>{'}'};</span><span><i>06</i><strong>buildSomething();</strong></span></div><div className="code-foot"><span className="pulse"/> READY TO SHIP <span>UTF-8</span></div></div><div className="floating-chip chip-top"><Braces size={15}/> JSON <span>↗</span></div><div className="floating-chip chip-bottom"><Zap size={15}/> Instant tools</div></div><div className="hero-bottom"><span>BUILT FOR THE DAILY WORKFLOW</span><div><span><Check size={14}/> 100% free</span><span><Check size={14}/> No sign-up</span><span><Check size={14}/> Private by design</span></div></div></section>
         <section className="section tools-section"><div className="section-heading"><div><div className="eyebrow">YOUR DAILY TOOLBELT</div><h2>Tools for every<br/><span>part of the workflow.</span></h2></div><p>Browse by category or jump straight into one of the focused utilities below.</p></div><div className="category-grid">{groups.map(g=><button key={g.name} className="category-card" onClick={()=>document.getElementById(`tool-group-${slugForTool(g.name)}`)?.scrollIntoView({behavior:'smooth',block:'start'})}><div className="category-top"><span className="category-icon"><g.icon size={21}/></span><span className="card-arrow"><ArrowLeftRight size={16}/></span></div><h3>{g.name}</h3><p>{g.tools.length} focused utilities</p><div className="category-tools">{g.tools.slice(0,4).map(t=><span key={t}>{t}</span>)}{g.tools.length>4&&<span>+ more</span>}</div><div className="category-bottom"><span>Browse tools</span><ChevronRight size={16}/></div></button>)}</div></section>
         <section className="section all-tools-section" id="all-tools"><div className="section-heading"><div><div className="eyebrow">32 TOOLS · 8 CATEGORIES</div><h2>Pick a tool.<br/><span>Get straight to work.</span></h2></div><p>Every card opens its own dedicated page and shareable URL. No buried workspaces.</p></div>
@@ -236,7 +286,7 @@ export default function App() {
         </section>
         <section className="section feature-strip"><div className="feature-intro"><div className="eyebrow">THE FREEDEV PROMISE</div><h2>Developer tools.<br/><span>Without the baggage.</span></h2><p>Utilities should save you time, not create another workflow to manage.</p></div><div className="feature-list"><div><span className="feature-icon"><Zap size={19}/></span><section><b>Instant by design</b><p>Results run right in your browser. No waiting on a server round-trip for simple transformations.</p></section></div><div><span className="feature-icon"><ShieldCheck size={19}/></span><section><b>Private by default</b><p>Your pasted code and data stay on your device in these client-side tools.</p></section></div><div><span className="feature-icon"><Sparkles size={19}/></span><section><b>Focused, not bloated</b><p>Clear controls, useful output and no feature walls getting between you and the task.</p></section></div></div></section>
         <section className="cta-band"><div className="cta-orb"/><div><div className="eyebrow">READY WHEN YOU ARE</div><h2>Get back to building.</h2><p>Pick a tool. Paste your input. Get your result. That's the whole workflow.</p></div><button className="button-primary" onClick={()=>selectTool('JSON Formatter')}>Open JSON Formatter <ChevronRight size={16}/></button></section>
-        <footer className="site-footer"><a className="brand footer-brand" href="/" onClick={e=>{e.preventDefault();goHome()}}><span className="brand-mark"><Code2 size={21}/></span><span><strong>Free<span>Dev</span></strong><small>Useful tools. No nonsense.</small></span></a><p>Free developer utilities, built for the people who build things.</p><div className="footer-links"><a href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noreferrer">GitHub <ExternalLink size={12}/></a><span>Free forever · No account required</span></div><div className="copyright">© {new Date().getFullYear()} FreeDev. Built to be useful.</div></footer>
+        <SiteFooter onHome={goHome} onSelectTool={selectTool} />
       </div>}
     </main>
   </div>;

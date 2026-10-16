@@ -75,3 +75,63 @@ html:has(.home-view)::-webkit-scrollbar,body:has(.home-view)::-webkit-scrollbar,
 .site-footer .footer-links{flex-wrap:wrap;row-gap:10px}
 .workspace-footer{margin-top:0}
 @media(display-mode:standalone){.site-footer{padding-bottom:max(25px,env(safe-area-inset-bottom))}.workspace-footer{padding-bottom:max(28px,env(safe-area-inset-bottom))}}
+
+
+/* FreePDF-style shared FreeToolz footer */
+.site-footer {
+  width: min(1240px, calc(100% - 48px));
+  margin: 0 auto 25px;
+  padding: 54px 0 20px;
+  border-top: 1px solid var(--line);
+  display: block;
+}
+.footer-main { display:grid; grid-template-columns:1.7fr 1fr 1fr 1.2fr; gap:34px; }
+.footer-brand { min-width:0; }
+.footer-brand-row { display:flex; align-items:center; gap:12px; width:fit-content; }
+.footer-favicon { width:43px; height:43px; flex:0 0 43px; display:grid; place-items:center; padding:0; }
+.footer-brand-name { display:block; color:#e7f1e9; font:700 21px var(--display); letter-spacing:-.7px; }
+.footer-brand-name span { color:var(--green); }
+.footer-brand p { margin:22px 0 20px; color:#91a99a; font-size:13px; line-height:1.8; }
+.footer-status { display:flex; align-items:center; gap:8px; color:#81988a; font:9px var(--mono); letter-spacing:.08em; }
+.footer-status .status-dot { width:6px; height:6px; border-radius:50%; background:#64e697; box-shadow:0 0 10px rgba(100,230,151,.6); }
+.footer-status .pulse { width:6px; height:6px; margin-left:-5px; }
+.footer-socials { display:flex; gap:9px; margin-top:18px; }
+.footer-social-link { width:38px; height:38px; display:grid; place-items:center; border:1px solid rgba(159,210,174,.18); border-radius:11px; color:#a9cdb5; background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(13,31,19,.5)); box-shadow:inset 0 1px rgba(255,255,255,.06); transition:transform .2s ease,border-color .2s ease,color .2s ease,background .2s ease; }
+.footer-social-link:hover { transform:translateY(-2px); border-color:rgba(139,239,176,.42); color:#d7ffe3; background:rgba(45,130,72,.18); }
+.footer-column { display:flex; flex-direction:column; align-items:flex-start; gap:11px; }
+.footer-heading { margin:3px 0 9px; color:var(--green); font:9px var(--mono); letter-spacing:.16em; }
+.footer-column button,.footer-column a { padding:0; border:0; background:transparent; color:#91a99a; font-size:12px; text-align:left; transition:color .2s ease,transform .2s ease; }
+.footer-column button:hover,.footer-column a:hover { color:#fff; transform:translateX(3px); }
+.footer-bottom { margin-top:54px; padding-top:18px; border-top:1px solid rgba(255,255,255,.06); display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px; color:#81988a; font:8px var(--mono); letter-spacing:.09em; }
+.footer-bottom span:last-child { text-align:right; }
+.footer-line { width:100px; height:1px; background:linear-gradient(90deg,transparent,rgba(107,230,160,.4),transparent); }
+.workspace-footer { max-width:1240px; margin:0 auto 25px; padding:38px 0 20px; }
+@media(max-width:900px) { .footer-main { grid-template-columns:1.4fr 1fr 1fr; gap:28px 22px; } .footer-brand { grid-row:span 2; } }
+@media(max-width:640px) {
+  .site-footer { width:calc(100% - 34px); padding-top:35px; }
+  .footer-main { grid-template-columns:1fr 1fr; gap:30px 18px; }
+  .footer-brand { grid-column:1 / -1; grid-row:auto; }
+  .footer-bottom { margin-top:36px; grid-template-columns:1fr; gap:11px; line-height:1.7; }
+  .footer-bottom span:last-child { text-align:left; }
+  .footer-line { width:100%; }
+  .workspace-footer { padding:30px 0 20px; }
+}
+@media(display-mode:standalone) { .site-footer { padding-bottom:max(25px,env(safe-area-inset-bottom)); } }
+
+
+/* Hide every page-level scrollbar on the homepage without disabling scrolling. */
+html:has(.home-view), body:has(.home-view), #root:has(.home-view),
+.app-shell:has(.home-view), .main-area:has(.home-view), .home-view {
+  scrollbar-width:none !important;
+  -ms-overflow-style:none !important;
+}
+html:has(.home-view)::-webkit-scrollbar,
+body:has(.home-view)::-webkit-scrollbar,
+#root:has(.home-view)::-webkit-scrollbar,
+.app-shell:has(.home-view)::-webkit-scrollbar,
+.main-area:has(.home-view)::-webkit-scrollbar,
+.home-view::-webkit-scrollbar {
+  display:none !important;
+  width:0 !important;
+  height:0 !important;
+}
