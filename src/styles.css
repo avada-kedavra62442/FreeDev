@@ -135,3 +135,8 @@ body:has(.home-view)::-webkit-scrollbar,
   width:0 !important;
   height:0 !important;
 }
+
+
+/* Keep the tool sidebar on tool pages, but give the homepage the full viewport. */
+.app-shell:has(.home-view) > .sidebar { display: none !important; }
+.app-shell:has(.home-view) > .main-area { margin-left: 0 !important; width: 100%; }
