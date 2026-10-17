@@ -187,54 +187,14 @@ const toolFromPath = path => {
   return groups.flatMap(group => group.tools).find(tool => slugForTool(tool) === slug) || '';
 };
 
-function SiteFooter({ onHome, onSelectTool, workspace = false }) {
-  const showAllTools = () => {
-    onHome();
-    window.setTimeout(() => document.getElementById('all-tools')?.scrollIntoView({ behavior: 'smooth' }), 80);
-  };
-  return <footer className={cx('site-footer', workspace && 'workspace-footer')}>
-    <div className="footer-main">
-      <div className="footer-brand">
-        <a className="footer-brand-row" href="/" onClick={e => { e.preventDefault(); onHome(); }}>
-          <span className="brand-mark footer-favicon"><Code2 size={21}/></span>
-          <span className="footer-brand-name">Free<span>Dev</span></span>
-        </a>
-        <p>Useful software.<br/>Without the nonsense.</p>
-        <div className="footer-status"><span className="status-dot"/><span className="pulse"/> Building useful things</div>
-        <div className="footer-socials">
-          <a href="https://github.com/avada-kedavra62442/" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="GitHub" title="GitHub"><Github size={18}/></a>
-          <a href="mailto:aarav.krish62442@gmail.com" className="footer-social-link" aria-label="Email" title="Email"><Mail size={18}/></a>
-          <a href="https://www.linkedin.com/in/aarav-krish-665702440/" target="_blank" rel="noopener noreferrer" className="footer-social-link" aria-label="LinkedIn" title="LinkedIn"><Linkedin size={18}/></a>
-        </div>
-      </div>
-      <div className="footer-column">
-        <span className="footer-heading">PRODUCTS</span>
-        <button onClick={onHome}>FreeDev</button>
-        <button onClick={showAllTools}>All developer tools</button>
-      </div>
-      <div className="footer-column">
-        <span className="footer-heading">TOOLS</span>
-        <button onClick={() => onSelectTool('JSON Formatter')}>JSON Formatter</button>
-        <button onClick={() => onSelectTool('CSS Formatter')}>CSS Formatter</button>
-        <button onClick={() => onSelectTool('Regex Tester')}>Regex Tester</button>
-        <button onClick={() => onSelectTool('URL Parser')}>URL Parser</button>
-        <button onClick={() => onSelectTool('Timezone Converter')}>Timezone Converter</button>
-      </div>
-      <div className="footer-column">
-        <span className="footer-heading">MORE TOOLS</span>
-        <button onClick={() => onSelectTool('Text Diff')}>Text Diff</button>
-        <button onClick={() => onSelectTool('CSV ↔ JSON')}>CSV ↔ JSON</button>
-        <button onClick={() => onSelectTool('JWT Decoder')}>JWT Decoder</button>
-        <a href="mailto:aarav.krish62442@gmail.com?subject=FreeToolz%20Feedback">Send feedback</a>
-      </div>
-    </div>
-    <div className="footer-bottom">
-      <span>© {new Date().getFullYear()} FreeToolz</span>
-      <span className="footer-line"/>
-      <span>BUILT FOR THE WEB · BUILT TO BE USEFUL</span>
-    </div>
-  </footer>;
-}
+function SiteFooter() { return (<footer className="ft-universal-footer">
+  <div className="ft-footer-main">
+    <div className="ft-footer-brand-block"><a className="ft-footer-brand" href="/" aria-label="FreeDev home"><img className="ft-footer-mark" src="/favicon.svg" alt="" aria-hidden="true"/><span>Free<span className="ft-footer-accent">Dev</span><small>FREE TOOLZ PROJECT</small></span></a><p>Useful software. Without the nonsense.</p><span className="ft-footer-status">● Building useful things</span></div>
+    <div className="ft-footer-column"><b>Products</b><a href="/">FreeDev</a><a href="https://free-toolz.vercel.app/">FreeToolz hub ↗</a></div>
+    <div className="ft-footer-column"><b>Tools &amp; information</b><a href="/#tools">Explore tools</a><a href="/#privacy">Privacy &amp; local processing</a><a href="mailto:aarav.krish62442@gmail.com?subject=FreeDev%20Feedback">Feedback</a></div>
+    <div className="ft-footer-column"><b>Connect</b><a href="https://github.com/avada-kedavra62442/FreeDev" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="mailto:aarav.krish62442@gmail.com">Email ↗</a><a href="https://www.linkedin.com/in/aarav-krish-665702440/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></div>
+  </div><div className="ft-footer-bottom"><span>© {new Date().getFullYear()} FreeToolz · FreeDev</span><span>FREE FOREVER · NO ADS · NO PAYWALLS</span></div>
+</footer>); }
 
 export default function App() {
   const [active,setActive]=useState(()=>toolFromPath(window.location.pathname));
